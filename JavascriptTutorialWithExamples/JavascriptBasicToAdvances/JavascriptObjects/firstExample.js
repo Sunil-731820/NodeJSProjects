@@ -20,3 +20,15 @@ console.log("The value of the Emp name from the new Objet is :",emp.name)
 console.log("the Gender is from the new Object is :",emp.gender)
 
 
+// using Object Constructor 
+
+function employee(id,name,salary){
+    this.id = id,
+    this.name = name,
+    this.salary = salary
+}
+
+e1 = new employee(1000,"Harish",2000000)
+console.log("the Emp Number from the first constructor is :",e1.id)
+console.log("The name from new COnstructor is :",e1.name)
+console.log("The Salary from the new Constructor is :",e1.salary)
