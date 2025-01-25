@@ -5,6 +5,12 @@ app.get('/',function(req,res){
 })
 
 
+// routing to the about Page 
+
+app.get('/about', function(req,res){
+    res.send("This is the About Page In Express Js ")
+});
+
 var server = app.listen(8000,function(){
     var host = server.address().address;
     var port = server.address().address;
