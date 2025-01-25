@@ -32,3 +32,30 @@ e1 = new employee(1000,"Harish",2000000)
 console.log("the Emp Number from the first constructor is :",e1.id)
 console.log("The name from new COnstructor is :",e1.name)
 console.log("The Salary from the new Constructor is :",e1.salary)
+
+// Use of the Object.assign Methods 
+
+const object1 = {
+    a : 1,
+    b:2,
+    c:3
+};
+
+const object3 = {
+    g:1,
+    h:2,
+    i:3
+};
+
+const object2 = Object.assign(
+    {
+        c:4,
+        d:5
+    },
+    object1
+)
+
+console.log("The Value of the Object 1 is :")
+console.log(object2.c,object2.d)
+
+
