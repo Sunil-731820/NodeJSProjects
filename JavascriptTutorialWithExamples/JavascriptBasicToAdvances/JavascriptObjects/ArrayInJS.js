@@ -73,3 +73,9 @@ for(i in resultedArray){
     console.log(resultedArray[i])
 }
 
+// Use of copyWithIn() 
+
+var arr = ["AngularJS","Node.js","JQuery","BootStrap"]
+
+var resultAftercopyingIsDone = arr.copyWithin(0,1,3)
+console.log(resultAftercopyingIsDone)
