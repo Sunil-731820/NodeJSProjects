@@ -14,6 +14,7 @@ app.get('/about', function(req,res){
 var server = app.listen(8000,function(){
     var host = server.address().address;
     var port = server.address().address;
+    console.log(`HostName is ${host} And port Number is ${port}`)
     console.log('Example app listening at http://%s:%s', host, port); 
 });
 
