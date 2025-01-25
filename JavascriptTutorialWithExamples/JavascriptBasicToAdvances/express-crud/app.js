@@ -98,6 +98,83 @@ app.delete('/users/:id', (req, res) => {
     });
 });
 
+
+// Adding the New Features for Search Users by Name 
+
+// Search - Find users by name (Partial match)
+app.get('/users/search', (req, res) => {
+    const { name } = req.query; // Query parameter for name
+
+    if (!name) {
+        return res.status(400).send('Name query parameter is required');
+    }
+
+    const query = 'SELECT * FROM users WHERE name LIKE ?';
+    const searchTerm = `%${name}%`; // Add wildcard characters for partial match
+
+    db.execute(query, [searchTerm], (err, results) => {
+        if (err) {
+            return res.status(500).send('Error searching for users');
+        }
+        res.status(200).json(results);
+    });
+});
+
+
+// Adding the New Features here Count the Number of Users
+
+// Count - Get the number of users
+app.get('/users/count', (req, res) => {
+    const query = 'SELECT COUNT(*) AS count FROM users';
+    
+    db.execute(query, (err, results) => {
+        if (err) {
+            return res.status(500).send('Error counting users from Database ');
+        }
+        res.status(200).json({ count: results[0].count });
+    });
+});
+
+// Adding the New Features of Get Users with Pagination 
+// Get users with pagination
+app.get('/users/paginate', (req, res) => {
+    const { page = 1, limit = 10 } = req.query; // Default to page 1 and 10 items per page
+
+    const offset = (page - 1) * limit; // Calculate the offset based on the page and limit
+    const query = 'SELECT * FROM users LIMIT ? OFFSET ?';
+
+    db.execute(query, [parseInt(limit), offset], (err, results) => {
+        if (err) {
+            return res.status(500).send('Error retrieving paginated users');
+        }
+        res.status(200).json(results);
+    });
+});
+
+
+// Adding the new Features for Bulk Insert Users 
+
+// Bulk Insert - Add multiple users
+app.post('/users/bulk', (req, res) => {
+    const users = req.body; // Expecting an array of user objects
+    
+    if (!Array.isArray(users) || users.length === 0) {
+        return res.status(400).send('Please provide an array of users');
+    }
+
+    const query = 'INSERT INTO users (name, email) VALUES ?';
+    const values = users.map(user => [user.name, user.email]); // Convert array of objects into array of arrays
+
+    db.query(query, [values], (err, result) => {
+        if (err) {
+            return res.status(500).send('Error inserting bulk users');
+        }
+        res.status(201).json({ insertedCount: result.affectedRows });
+    });
+});
+
+
+
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
