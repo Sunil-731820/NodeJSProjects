@@ -31,3 +31,9 @@ console.log(Number.isFinite(checkFiniteNumber(10,0)))
 console.log("Checking Number is Finite Or Not:")
 console.log(Number.isFinite(validFiniteNumber(10,2)))
 
+
+// taking the user Input 
+
+const userName = prompt("What is the User Name here please enter First")
+console.log("The user Name is :",userName)
+
