@@ -19,7 +19,7 @@ r1.question('What is Your Name Please Enter Here ',(name) =>{
     r1.question('What is favourites Color',(color) =>{
         console.log(`The fav Color is ${color}`)
         r1.close()    
-    });
+    });   
 
    
 })
