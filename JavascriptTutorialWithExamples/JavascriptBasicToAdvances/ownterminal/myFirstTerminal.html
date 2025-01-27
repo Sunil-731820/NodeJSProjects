@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Custom Terminal</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: monospace;
+            background-color: #1e1e1e;
+            color: #00ff00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .terminal {
+            width: 80%;
+            height: 70%;
+            background: #000;
+            border: 2px solid #00ff00;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .input-line {
+            display: flex;
+        }
+
+        .prompt {
+            margin-right: 5px;
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            outline: none;
+        }
+
+        .output {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="terminal" id="terminal">
+        <div class="output">Welcome to your enhanced custom terminal! Type `help` to see available commands.</div>
+        <div class="input-line">
+            <span class="prompt">></span>
+            <input type="text" id="commandInput" autofocus>
+        </div>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const input = document.getElementById('commandInput');
+        let commandHistory = JSON.parse(localStorage.getItem('commandHistory')) || [];
+        let historyIndex = commandHistory.length;
+        let currentDirectory = '/';
+
+        // Define available commands
+        const commands = {
+            help: () => 'Available commands: help, clear, echo [message], date, math [expression], cd [path]',
+            clear: () => {
+                const outputs = terminal.querySelectorAll('.output');
+                outputs.forEach(output => output.remove());
+                return '';
+            },
+            echo: (args) => args.join(' ') || 'Usage: echo [message]',
+            date: () => new Date().toString(),
+            math: (args) => {
+                try {
+                    return eval(args.join(' ')) || 'Usage: math [expression]';
+                } catch {
+                    return 'Invalid mathematical expression.';
+                }
+            },
+            cd: (args) => {
+                if (args.length === 0) {
+                    return 'Usage: cd [path]';
+                }
+                const path = args[0];
+                if (path === '..') {
+                    if (currentDirectory !== '/') {
+                        currentDirectory = currentDirectory.substring(0, currentDirectory.lastIndexOf('/')) || '/';
+                    }
+                } else if (path.startsWith('/')) {
+                    currentDirectory = path;
+                } else {
+                    if (currentDirectory === '/') {
+                        currentDirectory += path;
+                    } else {
+                        currentDirectory += '/' + path;
+                    }
+                }
+                return `Changed directory to ${currentDirectory}`;
+            }
+        };
+
+        // Save command history to local storage
+        function saveHistory() {
+            localStorage.setItem('commandHistory', JSON.stringify(commandHistory));
+        }
+
+        // Handle input
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const commandLine = input.value.trim();
+                const [command, ...args] = commandLine.split(' ');
+
+                // Save command to history
+                if (commandLine) {
+                    commandHistory.push(commandLine);
+                    historyIndex = commandHistory.length;
+                    saveHistory();
+                }
+
+                // Display the command in the terminal
+                appendOutput(`> ${commandLine}`);
+
+                // Process the command
+                if (commands[command]) {
+                    const result = commands[command](args);
+                    if (result) appendOutput(result);
+                } else {
+                    appendOutput(`Command not found: ${command}`);
+                }
+
+                // Clear the input
+                input.value = '';
+                scrollToBottom();
+            } else if (event.key === 'ArrowUp') {
+                // Navigate up in history
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    input.value = commandHistory[historyIndex] || '';
+                }
+            } else if (event.key === 'ArrowDown') {
+                // Navigate down in history
+                if (historyIndex < commandHistory.length) {
+                    historyIndex++;
+                    input.value = commandHistory[historyIndex] || '';
+                }
+            } else if (event.key === 'Tab') {
+                // Autocomplete feature
+                event.preventDefault();
+                const partial = input.value.trim();
+                const matches = Object.keys(commands).filter(cmd => cmd.startsWith(partial));
+                if (matches.length === 1) {
+                    input.value = matches[0] + ' ';
+                } else if (matches.length > 1) {
+                    appendOutput(`Suggestions: ${matches.join(', ')}`);
+                }
+            }
+        });
+
+        // Append output to the terminal
+        function appendOutput(text) {
+            const outputDiv = document.createElement('div');
+            outputDiv.className = 'output';
+            outputDiv.textContent = text;
+            terminal.insertBefore(outputDiv, input.parentNode);
+        }
+
+        // Scroll to the bottom of the terminal
+        function scrollToBottom() {
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Load command history on startup
+        function loadHistory() {
+            commandHistory.forEach(cmd => appendOutput(`> ${cmd}`));
+        }
+
+        loadHistory();
+    </script>
+</body>
+
+</html>
