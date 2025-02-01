@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Right-click Menu</title>
+    <style>
+        /* Style for the custom context menu */
+        #contextMenu {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 5px 0;
+        }
+
+        #contextMenu li {
+            padding: 10px;
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        #contextMenu li:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Right-click anywhere on this page to see the custom menu</h1>
+
+    <!-- Custom context menu -->
+    <ul id="contextMenu">
+        <li id="copy">Copy</li>
+        <li id="paste">Paste</li>
+        <li id="delete">Delete</li>
+        <li id="add">Add Data</li>
+        <li id="sub">Sub</li>
+    </ul>
+
+    <script>
+        // Reference to the custom context menu
+        const contextMenu = document.getElementById('contextMenu');
+
+        // Add event listener for right-click (contextmenu event)
+        document.addEventListener('contextmenu', function (event) {
+            event.preventDefault(); // Prevent the default browser context menu
+
+            // Get mouse position
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+
+            // Position the custom context menu where the right-click happened
+            contextMenu.style.left = `${mouseX}px`;
+            contextMenu.style.top = `${mouseY}px`;
+
+            // Show the custom context menu
+            contextMenu.style.display = 'block';
+        });
+
+        // Hide the custom menu when clicking elsewhere
+        document.addEventListener('click', function () {
+            contextMenu.style.display = 'none';
+        });
+
+        // Add actions for Copy, Paste, and Delete options
+        document.getElementById('copy').addEventListener('click', function () {
+            alert('Copy action triggered');
+            contextMenu.style.display = 'none'; // Hide menu after action
+        });
+
+        document.getElementById('paste').addEventListener('click', function () {
+            alert('Paste action triggered');
+            contextMenu.style.display = 'none'; // Hide menu after action
+        });
+
+        document.getElementById('delete').addEventListener('click', function () {
+            alert('Delete action triggered');
+            contextMenu.style.display = 'none'; // Hide menu after action
+        });
+
+        document.getElementById('add').addEventListener('click', function () {
+            console.log("Event Listener is getting Called ")
+            alert("Add Event is calling ")
+            contextMenu.style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>

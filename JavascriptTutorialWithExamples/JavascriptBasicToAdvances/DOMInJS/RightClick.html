@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Right Click Example</title>
+</head>
+
+<body>
+    <h1>Right-click anywhere on this page</h1>
+
+    <script>
+        // Add event listener for right-click (contextmenu event)
+        document.addEventListener('contextmenu', function (event) {
+            event.preventDefault(); // Prevent the default context menu
+            alert('Right-clicked on the page!');
+        });
+    </script>
+</body>
+
+</html>
